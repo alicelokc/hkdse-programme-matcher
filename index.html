@@ -2,15 +2,16 @@
 <html lang="zh-HK">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>HKDSE 課程配對｜JUPAS／E-APP 參考</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>DSE 揀科配對｜參考收生分數</title>
   <link rel="stylesheet" href="assets/styles.css" />
 </head>
 <body>
   <header class="top">
     <div class="wrap">
-      <h1>HKDSE 課程配對</h1>
-      <p class="tagline">輸入預計成績，參考官方收生分數搵可能適合嘅課程（只供參考，非取錄保證）</p>
+      <p class="eyebrow">升學參考工具</p>
+      <h1>DSE 揀科配對</h1>
+      <p class="tagline">填預計成績，對照院校官方收生分數，睇邊啲課程可能適合你。<strong>只供參考，唔係取錄保證。</strong></p>
     </div>
   </header>
 
@@ -20,48 +21,74 @@
       <p id="coverageText">載入中…</p>
     </section>
 
-    <section class="card">
-      <h2>① 輸入預計 HKDSE 成績</h2>
-      <p class="hint">核心科 + 選修科。公民與社會發展只需「達標／未達標」。等級：1–5、5*、5**</p>
-      <div class="grades-grid" id="gradesGrid"></div>
-      <div class="row">
-        <button type="button" id="addElective" class="btn secondary">＋ 加選修科</button>
-        <button type="button" id="matchBtn" class="btn primary">配對課程</button>
+    <section class="card grade-panel">
+      <div class="section-head">
+        <h2>① 預計成績</h2>
+        <p class="hint">撳大掣揀等級就得。公民科只需「達標／未達標」。分數會即時計 Best 5。</p>
       </div>
-      <div class="score-box" id="scoreBox" hidden>
-        <div>未加權 Best 5（7 分制，常見於嶺南／教大等）：<strong id="best5_7">—</strong></div>
-        <div>未加權 Best 5（8.5 分制，常見於中大／科大／城大）：<strong id="best5_85">—</strong></div>
-        <p class="hint">注意：理大等多數課程有科目加權，官方分數未必等同未加權 Best 5；配對結果只係粗略參考。</p>
+
+      <div class="demo-row" aria-label="示範成績">
+        <span class="demo-label">示範（一撳填入）</span>
+        <button type="button" class="demo-chip" data-demo="science">理科約 22–24</button>
+        <button type="button" class="demo-chip" data-demo="arts">文商約 20–22</button>
+        <button type="button" class="demo-chip" data-demo="clear">清空</button>
       </div>
+
+      <h3 class="subhead">核心科目</h3>
+      <div class="core-grid" id="coreGrid"></div>
+
+      <h3 class="subhead">選修科目</h3>
+      <p class="hint tight">先揀科目，再撳等級。可加多科／刪除。</p>
+      <div id="electiveList" class="elective-list"></div>
+      <button type="button" id="addElective" class="btn secondary block">＋ 加選修科</button>
+
+      <div class="live-score" id="liveScore" aria-live="polite">
+        <div class="live-score-title">即時 Best 5（未加權）</div>
+        <div class="live-score-grid">
+          <div class="live-pill">
+            <span class="live-k">7 分制</span>
+            <strong id="best5_7">—</strong>
+            <span class="live-hint">嶺南／教大等常用</span>
+          </div>
+          <div class="live-pill">
+            <span class="live-k">8.5 分制</span>
+            <strong id="best5_85">—</strong>
+            <span class="live-hint">中大／科大／城大等常用</span>
+          </div>
+        </div>
+        <p class="hint tight">理大等課程有科目加權，官方分未必等同呢個數；配對只係粗略參考。</p>
+      </div>
+
+      <button type="button" id="matchBtn" class="btn primary block big">睇配對結果</button>
     </section>
 
     <section class="card">
       <h2>② 篩選／瀏覽</h2>
       <div class="filters">
-        <label>關鍵字／JUPAS 編號
-          <input type="search" id="q" placeholder="例如 JS5240、電腦、護理…" />
+        <label>搜尋課程／編號
+          <input type="search" id="q" placeholder="例如 JS5240、護理、電腦…" autocomplete="off" />
         </label>
         <label>院校
           <select id="instFilter"><option value="">全部</option></select>
         </label>
-        <label>興趣範疇
+        <label>興趣
           <select id="tagFilter"><option value="">全部</option></select>
         </label>
-        <label>系統
+        <label>途徑
           <select id="sysFilter">
             <option value="">全部</option>
-            <option value="JUPAS">JUPAS</option>
+            <option value="JUPAS">聯招 JUPAS</option>
             <option value="E-APP">E-APP／自資</option>
           </select>
         </label>
-        <label>配對結果
+        <label>配對程度
           <select id="matchFilter">
-            <option value="all">顯示全部（可瀏覽）</option>
+            <option value="all">顯示全部</option>
             <option value="matched">只看已配對</option>
-            <option value="strong">≥ Median（較有競爭力・參考）</option>
-            <option value="border">LQ–Median（接近門檻・參考）</option>
-            <option value="reach">低於 LQ（較進取・參考）</option>
-            <option value="nocomp">未能直接比較分數</option>
+            <option value="strong">≥ 中位數（較有競爭力）</option>
+            <option value="border">下四分位至中位數</option>
+            <option value="reach">低於下四分位（較進取）</option>
+            <option value="nocomp">未能直接比較</option>
           </select>
         </label>
       </div>
@@ -71,10 +98,10 @@
       <div class="results-meta">
         <span id="resultCount">0 個課程</span>
         <span class="legend">
-          <span class="pill strong">≥Median</span>
-          <span class="pill border">LQ–Median</span>
-          <span class="pill reach">&lt;LQ</span>
-          <span class="pill na">未能比較</span>
+          <span class="pill strong">≥中位</span>
+          <span class="pill border">接近</span>
+          <span class="pill reach">進取</span>
+          <span class="pill na">未能比</span>
         </span>
       </div>
       <div id="results" class="results"></div>
@@ -83,14 +110,13 @@
     <section class="card about" id="about">
       <h2>來源與免責</h2>
       <ul id="sourceList"></ul>
-      <p class="hint">本工具由升學顧問用途製作。收生分數來自各院校／JUPAS／Concourse 官方公布，僅供參考；取錄尚視乎面試、Band 選擇、整體競爭等。課程簡介若已填寫，均據官方課程頁改寫約 50 字；未能核實者會標示「簡介待補」。</p>
+      <p class="hint">收生分數來自院校／聯招／Concourse 官方公布，只供參考。取錄仍視乎面試、Band 選擇、整體競爭等。課程簡介據官方 Short Description 改寫；未能核實者會留空或顯示官方原文摘要。</p>
     </section>
   </main>
 
   <footer class="foot">
-    <div class="wrap">資料編譯日期：2026-10-16（香港）・非官方 JUPAS／院校網站</div>
+    <div class="wrap">資料編譯：2026-10-16（香港）・非官方聯招／院校網站</div>
   </footer>
-
   <script src="assets/app.js"></script>
 </body>
 </html>
