@@ -17,7 +17,6 @@
 
   <main class="wrap">
     <section class="card notice" id="coverageBanner">
-      <strong>數據說明</strong>
       <p id="coverageText">載入中…</p>
     </section>
 
@@ -25,6 +24,7 @@
       <div class="section-head">
         <h2>① 預計成績</h2>
         <p class="hint">撳大掣揀等級就得。公民科只需「達標／未達標」。分數會即時計 Best 5。</p>
+        <p class="hint tight grade-hint" id="gradeHint">請填你的預計成績</p>
       </div>
 
       <div class="demo-row" aria-label="示範成績">
@@ -42,31 +42,32 @@
       <div id="electiveList" class="elective-list"></div>
       <button type="button" id="addElective" class="btn secondary block">＋ 加選修科</button>
 
-      <div class="live-score" id="liveScore" aria-live="polite">
-        <div class="live-score-title">即時 Best 5（未加權）</div>
-        <div class="live-score-grid">
-          <div class="live-pill">
-            <span class="live-k">7 分制</span>
-            <strong id="best5_7">—</strong>
-            <span class="live-hint">嶺南／教大等常用</span>
+      <div class="sticky-match" id="stickyMatch">
+        <div class="live-score" id="liveScore" aria-live="polite">
+          <div class="live-score-title">即時 Best 5（未加權）</div>
+          <div class="live-score-grid">
+            <div class="live-pill">
+              <span class="live-k">7 分制</span>
+              <strong id="best5_7">—</strong>
+              <span class="live-hint">嶺南／教大／HKCC 等</span>
+            </div>
+            <div class="live-pill">
+              <span class="live-k">8.5 分制</span>
+              <strong id="best5_85">—</strong>
+              <span class="live-hint">中大／科大／城大等</span>
+            </div>
           </div>
-          <div class="live-pill">
-            <span class="live-k">8.5 分制</span>
-            <strong id="best5_85">—</strong>
-            <span class="live-hint">中大／科大／城大等常用</span>
-          </div>
+          <p class="hint tight" id="scoreExplain">中位＝一半取錄同學高於／低於此分；下四分位＝約四分一取錄同學低於此分。「7分制」5*=6、5**=7；「8.5分制」5*=7、5**=8.5。</p>
         </div>
-        <p class="hint tight">理大等課程有科目加權，官方分未必等同呢個數；配對只係粗略參考。</p>
+        <button type="button" id="matchBtn" class="btn primary block big">睇配對結果</button>
       </div>
-
-      <button type="button" id="matchBtn" class="btn primary block big">睇配對結果</button>
     </section>
 
     <section class="card">
       <h2>② 篩選／瀏覽</h2>
       <div class="filters">
         <label>搜尋課程／編號
-          <input type="search" id="q" placeholder="例如 JS5240、護理、電腦…" autocomplete="off" />
+          <input type="search" id="q" placeholder="例如 JS5240、護理、電腦、中大…" autocomplete="off" />
         </label>
         <label>院校
           <select id="instFilter"><option value="">全部</option></select>
@@ -85,23 +86,26 @@
           <select id="matchFilter">
             <option value="all">顯示全部</option>
             <option value="matched">只看已配對</option>
-            <option value="strong">≥ 中位數（較有競爭力）</option>
-            <option value="border">下四分位至中位數</option>
-            <option value="reach">低於下四分位（較進取）</option>
-            <option value="nocomp">未能直接比較</option>
+            <option value="strong">≥ 中位（較有競爭力）</option>
+            <option value="border">接近（下四分位至中位）</option>
+            <option value="reach">較進取（低於下四分位）</option>
+            <option value="nocomp">未能比較</option>
           </select>
         </label>
       </div>
     </section>
 
     <section>
+      <div class="match-summary" id="matchSummary" hidden>
+        <strong id="summaryText">你而家 7分制 —、8.5分制 —</strong>
+      </div>
       <div class="results-meta">
         <span id="resultCount">0 個課程</span>
         <span class="legend">
           <span class="pill strong">≥中位</span>
           <span class="pill border">接近</span>
-          <span class="pill reach">進取</span>
-          <span class="pill na">未能比</span>
+          <span class="pill reach">較進取</span>
+          <span class="pill na">未能比較</span>
         </span>
       </div>
       <div id="results" class="results"></div>
@@ -109,7 +113,10 @@
 
     <section class="card about" id="about">
       <h2>來源與免責</h2>
-      <ul id="sourceList"></ul>
+      <details id="sourceFold" class="source-fold page-sources">
+        <summary>官方來源列表</summary>
+        <ul id="sourceList"></ul>
+      </details>
       <p class="hint">收生分數來自院校／聯招／Concourse 官方公布，只供參考。取錄仍視乎面試、Band 選擇、整體競爭等。課程簡介據官方 Short Description 改寫；未能核實者會留空或顯示官方原文摘要。</p>
     </section>
   </main>
